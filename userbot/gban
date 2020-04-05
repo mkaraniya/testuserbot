@@ -72,9 +72,9 @@ UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 
 
 
-@register(outgoing=True, pattern="^.ban(?: |$)(.*)")
-async def ban(bon):
-    """ For .ban command, bans the replied/tagged person """
+@register(outgoing=True, pattern="^.gban(?: |$)(.*)")
+async def gban(bon):
+    """ For .gban command, gbans the replied/tagged person """
     # Here laying the sanity check
     chat = await bon.get_chat()
     admin = chat.admin_rights
@@ -107,27 +107,27 @@ async def ban(bon):
             await reply.delete()
     except BadRequestError:
         await bon.edit(
-            "`I dont have message nuking rights! But still he was banned!`")
+            "`I dont have message nuking rights! But still he was gbanned!`")
         return
     # Delete message and then tell that the command
     # is done gracefully
     # Shout out the ID, so that fedadmins can fban later
     if reason:
-        await bon.edit(f"`{str(user.id)}` was banned !!\nReason: {reason}")
+        await bon.edit(f"`{str(user.id)}` was gbanned !!\nReason: {reason}")
     else:
-        await bon.edit(f"`{str(user.id)}` was banned !!")
+        await bon.edit(f"`{str(user.id)}` was gbanned !!")
     # Announce to the logging group if we have banned the person
     # successfully!
     if BOTLOG:
         await bon.client.send_message(
-            BOTLOG_CHATID, "#BAN\n"
+            BOTLOG_CHATID, "#GBAN\n"
             f"USER: [{user.first_name}](tg://user?id={user.id})\n"
             f"CHAT: {bon.chat.title}(`{bon.chat_id}`)")
 
 
-@register(outgoing=True, pattern="^.unban(?: |$)(.*)")
+@register(outgoing=True, pattern="^.ungban(?: |$)(.*)")
 async def nothanos(unbon):
-    """ For .unban command, unbans the replied/tagged person """
+    """ For .ungban command, ungbans the replied/tagged person """
     # Here laying the sanity check
     chat = await unbon.get_chat()
     admin = chat.admin_rights
@@ -139,7 +139,7 @@ async def nothanos(unbon):
         return
 
     # If everything goes well...
-    await unbon.edit("`Unbanning...`")
+    await unbon.edit("`Ungbanning...`")
 
     user = await get_user_from_event(unbon)
     user = user[0]
@@ -151,15 +151,15 @@ async def nothanos(unbon):
     try:
         await unbon.client(
             EditBannedRequest(unbon.chat_id, user.id, UNBAN_RIGHTS))
-        await unbon.edit("```Unbanned Successfully```")
+        await unbon.edit("```Ungbanned Successfully```")
 
         if BOTLOG:
             await unbon.client.send_message(
-                BOTLOG_CHATID, "#UNBAN\n"
+                BOTLOG_CHATID, "#UNGBAN\n"
                 f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                 f"CHAT: {unbon.chat.title}(`{unbon.chat_id}`)")
     except UserIdInvalidError:
-        await unbon.edit("`Uh oh my unban logic broke!`")
+        await unbon.edit("`Uh oh my ungban logic broke!`")
 
 @register(outgoing=True, pattern="^.ungmute(?: |$)(.*)")
 async def ungmoot(un_gmute):
