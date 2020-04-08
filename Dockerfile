@@ -9,7 +9,7 @@ RUN sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' -i /etc/apk/r
 #
 # Installing Packages
 #
-RUN apk add --update \
+RUN apk add --no-cache=true --update \
     coreutils \
     bash \
     build-base \
@@ -41,8 +41,8 @@ RUN apk add --update \
     pv \
     jq \
     wget \
-    python \
-    python-dev \
+    #python \
+    #python-dev \
     python3 \
     python3-dev \
     readline-dev \
@@ -54,7 +54,7 @@ RUN apk add --update \
     chromium-chromedriver \
     zlib-dev \
     jpeg \
-#
+    #
     build-base \
     bzip2-dev \
     curl \
@@ -90,8 +90,7 @@ RUN apk add --update \
     ffmpeg \
     sqlite-dev \
     sudo \
-    zlib-dev \
-    python-dev
+    zlib-dev
 
 
 
