@@ -51,7 +51,7 @@ async def userid(event):
     result = await bot(functions.channels.GetAdminedPublicChannelsRequest())
     output_str = ""
     for channel_obj in result.chats:
-        output_str += f"-{channel_obj.id} \n"
+        output_str += f"-100{channel_obj.id} \n"
     await event.edit(output_str)
     
     
