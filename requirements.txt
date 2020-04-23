@@ -9,11 +9,7 @@ dnspython
 emoji
 gitpython
 google-api-python-client>=1.8.0
-<<<<<<< HEAD
 google-auth-oauthlib>=0.4.1
-=======
-google-auth-oauthlib
->>>>>>> 890ecf67e008b6b60013d1a4f69ea8fa557f44ab
 googletrans>=2.4.0
 google_images_download>=2.7.1
 gTTS>=2.1.1
@@ -53,9 +49,6 @@ PyGithub
 bs4
 covid
 pip>=19.2.3
-<<<<<<< HEAD
-selenium<=75.0.0.1
-=======
 selenium>=3.141.0
 git+https://github.com/LonamiWebs/Telethon
 git+https://github.com/ahupp/python-magic
@@ -66,4 +59,3 @@ pyfiglet
 jotquote
 csvfaker
 pymongo
->>>>>>> 890ecf67e008b6b60013d1a4f69ea8fa557f44ab
