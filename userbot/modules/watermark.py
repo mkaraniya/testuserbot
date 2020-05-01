@@ -69,7 +69,7 @@ async def water(mark):
                 )
             )
         except Exception as e:  # pylint:disable=C0103,W0703
-            await mone.edit(str(e))
+            await mone.edit(int(e))
         else:
             end = datetime.now()
             ms = (end - start).seconds
