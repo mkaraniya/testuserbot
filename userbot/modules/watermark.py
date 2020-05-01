@@ -45,7 +45,7 @@ if 1 == 1:
     client = bot
 
 
-watermark_path = "./bin"
+watermark_path = "./downloads/"
 
 @register(outgoing=True, pattern="^.watermark(?: |$)(.*)")
 async def water(mark):
@@ -82,7 +82,7 @@ async def water(mark):
         # filename = sorted(get_lst_of_files('./ravana/watermark/' + reply_message.file.name, []))
         #filename = filename + "/"
         await mark.edit("Uploading now")
-        caption_rts = os.path.basename(watermark_path + reply_message.file.name)
+        caption_rts = (os.path.basename(str(watermark_path + reply_message.file.name)))
         await bot.send_file(
             mark.chat_id,
             watermark_path + reply_message.file.name,
