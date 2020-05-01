@@ -34,7 +34,7 @@ from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.messages import SendMediaRequest
 
 
-import LOGS
+import logging
 
 
 LOGS = getLogger(__name__)
