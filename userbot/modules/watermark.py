@@ -34,10 +34,10 @@ from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.messages import SendMediaRequest
 
 
-import logging
+import LOGS
 
 
-logger = logging.getLogger(__name__)
+LOGS = getLogger(__name__)
 
 
 
@@ -49,17 +49,17 @@ if 1 == 1:
 
 
 @register(outgoing=True, pattern="^.watermark(?: |$)(.*)")
-async def _(event):
-    if event.fwd_from:
+async def water(mark):
+    if mark.fwd_from:
         return
-    mone = await event.edit("Processing ...")
+    mone = await mark.edit("Processing ...")
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
     if not os.path.isdir("./downloads/"):
         os.makedirs("./downloads/")
-    if event.reply_to_msg_id:
+    if mark.reply_to_msg_id:
         start = datetime.now()
-        reply_message = await event.get_reply_message()
+        reply_message = await mark.get_reply_message()
         try:
             c_time = time.time()
             downloaded_file_name = await bot.download_media(
@@ -82,12 +82,12 @@ async def _(event):
             )
         # filename = sorted(get_lst_of_files('./ravana/watermark/' + reply_message.file.name, []))
         #filename = filename + "/"
-        await event.edit("Uploading now")
+        await mark.edit("Uploading now")
         caption_rts = os.path.basename(watermark_path + reply_message.file.name)
         await bot.send_file(
-            event.chat_id,
+            mark.chat_id,
             watermark_path + reply_message.file.name,
-            reply_to=event.message.id,
+            reply_to=mark.message.id,
             progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
                 progress(d, t, event, c_time, "trying to upload")
             )
