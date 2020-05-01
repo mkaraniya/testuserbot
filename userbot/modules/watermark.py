@@ -37,8 +37,7 @@ from telethon.tl.functions.messages import SendMediaRequest
 import logging
 
 
-LOGS = getLogger(__name__)
-
+logger = logging.getLogger(__name__)
 
 
 if 1 == 1:
