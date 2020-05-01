@@ -50,6 +50,7 @@ PyGithub
 PyDrive2
 pyDownload
 bs4
+PyPDF2
 covid
 pip>=19.2.3
 selenium>=3.141.0
