@@ -45,7 +45,7 @@ if 1 == 1:
     client = bot
 
 
-watermark_path='./bin
+watermark_path = "./bin"
 
 @register(outgoing=True, pattern="^.watermark(?: |$)(.*)")
 async def water(mark):
