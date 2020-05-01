@@ -51,7 +51,7 @@ if 1 == 1:
 async def water(mark):
     if mark.fwd_from:
         return
-    mone = await mark.edit("Processing ...")
+    water = await mark.edit("Processing ...")
     if not os.path.isdir(TEMP_DOWNLOAD_DIRECTORY):
         os.makedirs(TEMP_DOWNLOAD_DIRECTORY)
     if not os.path.isdir("./downloads/"):
@@ -88,7 +88,7 @@ async def water(mark):
             watermark_path + reply_message.file.name,
             reply_to=mark.message.id,
             progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                progress(d, t, event, c_time, "trying to upload")
+                progress(d, t, mark, c_time, "trying to upload")
             )
         )
         # r=root, d=directories, f = files
