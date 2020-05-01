@@ -65,7 +65,7 @@ async def water(mark):
                 reply_message,
                 TEMP_DOWNLOAD_DIRECTORY,
                 progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                    progress(d, t, mone, c_time, "trying to download")
+                    progress(d, t, water, c_time, "trying to download")
                 )
             )
         except Exception as e:  # pylint:disable=C0103,W0703
