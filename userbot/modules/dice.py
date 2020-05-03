@@ -4,6 +4,7 @@
 from telethon.tl.types import InputMediaDice
 import emoji
 #from uniborg.util import admin_cmd
+from emoji import emoticon
 from userbot.events import register 
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot, ALIVE_NAME
 
