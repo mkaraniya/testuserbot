@@ -10,6 +10,8 @@ RUN sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' -i /etc/apk/r
 # Installing Packages
 #
 RUN apk add --no-cache=true --update \
+    python3 \
+    python3-dev \
     coreutils \
     bash \
     build-base \
@@ -43,8 +45,6 @@ RUN apk add --no-cache=true --update \
     wget \
     freetype \
     freetype-dev \
-    python3 \
-    python3-dev \
     readline-dev \
     sqlite \
     ffmpeg \
