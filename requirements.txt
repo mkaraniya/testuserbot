@@ -6,8 +6,8 @@ cowpy
 TgCrypto>=1.2.0
 cffi>=1.0.0
 dnspython
-emoji>=13.0
-emoticon>=13.0
+emoji>=0.5.4
+emoticon>=0.5.4
 gitpython
 google-api-python-client>=1.8.0
 google-auth-oauthlib>=0.4.1
