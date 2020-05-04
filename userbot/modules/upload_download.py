@@ -9,6 +9,10 @@
 """ Userbot module which contains everything related to \
     downloading/uploading from/to the server. """
 
+import logging
+import mimetypes
+from datetime import datetime
+from time import sleep
 import json
 import os
 import subprocess
@@ -20,10 +24,16 @@ from pySmartDL import SmartDL
 import asyncio
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-from telethon.tl.types import DocumentAttributeVideo
+import psutil
+from pyDownload import Downloader
+from pydrive2.auth import GoogleAuth
+from pydrive2.drive import GoogleDrive
+from telethon.tl.types import DocumentAttributeVideo, MessageMediaPhoto
 
-from userbot import LOGS, CMD_HELP, TEMP_DOWNLOAD_DIRECTORY
+from userbot import LOGS, CMD_HELP, TEMP_DOWNLOAD_DIRECTORY, GDRIVE_FOLDER
 from userbot.events import register
+
+TEMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY", "./")
 
 
 async def progress(current, total, event, start, type_of_ps, file_name=None):
