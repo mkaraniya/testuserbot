@@ -14,7 +14,7 @@ import os
 import subprocess
 import time
 import math
-
+from io import BytesIO
 from pySmartDL import SmartDL
 import asyncio
 from hachoir.metadata import extractMetadata
