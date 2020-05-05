@@ -1,4 +1,5 @@
 base
+lxml
 aiohttp
 aria2p
 async_generator
@@ -21,7 +22,6 @@ heroku3>=3.4.0
 psutil
 httplib2==0.15.0
 humanize
-lxml
 oauth2client
 Pillow>=6.0.0
 psycopg2
