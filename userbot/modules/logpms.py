@@ -11,7 +11,7 @@ NO_PM_LOG_USERS = []
 
 
 #@borg.on(admin_cmd(incoming=True, func=lambda e: e.is_private))
-@register(incoming=True, func=lambda e: e.is_private))
+@register(incoming=True, func=lambda e: e.is_private)
 async def monito_p_m_s(event):
     sender = await event.get_sender()
     if BOTLOG and not sender.bot:
