@@ -7,7 +7,7 @@ from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
 from userbot.events import register
 
 
-bot.storage.NO_PM_LOG_USERS = []
+userbot.storage.NO_PM_LOG_USERS = []
 
 
 #@borg.on(events.NewMessage(incoming=True, func=lambda e: e.is_private))
