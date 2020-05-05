@@ -29,7 +29,7 @@ async def monito_p_m_s(event):
 
 
 #@borg.on(admin_cmd("nolog ?(.*)"))
-@register(outgoing=True, pattern="^.nolog$")
+@register(outgoing=True, pattern="^.nolog(?: |$)(.*)")
 async def approve_p_m(event):
     if event.fwd_from:
         return
