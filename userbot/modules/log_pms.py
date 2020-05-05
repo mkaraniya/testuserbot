@@ -16,7 +16,7 @@ async def monito_p_m_s(event):
     sender = await event.get_sender()
     if BOTLOG and not sender.bot:
         chat = await event.get_chat()
-        if chat.id not in bot.userbot.storage.NO_PM_LOG_USERS and chat.id != bot.uid:
+        if chat.id not in bot.NO_PM_LOG_USERS and chat.id != bot.uid:
             try:
                 e = await bot.get_entity(int(BOTLOG_CHATID))
                 fwd_message = await bot.forward_messages(
@@ -37,8 +37,8 @@ async def approve_p_m(event):
     chat = await event.get_chat()
     if BOTLOG:
         if event.is_private:
-            if chat.id not in bot.userbot.storage.NO_PM_LOG_USERS:
-                bot.userbot.storage.NO_PM_LOG_USERS.append(chat.id)
+            if chat.id not in bot.NO_PM_LOG_USERS:
+                bot.NO_PM_LOG_USERS.append(chat.id)
                 await event.edit("Won't Log Messages from this chat")
                 await asyncio.sleep(3)
                 await event.delete()
