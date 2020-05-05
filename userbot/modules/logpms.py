@@ -16,7 +16,7 @@ async def monito_p_m_s(event):
     sender = await event.get_sender()
     if BOTLOG and not sender.bot:
         chat = await event.get_chat()
-        if chat.id not in NO_PM_LOG_USERS and chat.id != bot.user_id:
+        if chat.id not in NO_PM_LOG_USERS and chat.id != user_id:
             try:
                 e = await bot.get_entity(int(BOTLOG_CHATID))
                 fwd_message = await bot.forward_messages(
