@@ -10,13 +10,13 @@ RUN sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' -i /etc/apk/r
 # Installing Packages
 #
 RUN apk add --no-cache=true --update \
-    python3 \
-    python3-dev \
     coreutils \
     bash \
     build-base \
     bzip2-dev \
     curl \
+    python3 \
+    python3-dev \
     figlet \
     gcc \
     g++ \
