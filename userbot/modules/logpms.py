@@ -105,22 +105,21 @@ async def fetch_info(replied_user, event):
     return photo, caption
 
 #@borg.on(admin_cmd(incoming=True, func=lambda e: e.is_private))
-@register(incoming=True, func=lambda e: e.is_private)
+@register(incoming=True, disable_edited=True)
 async def monito_p_m_s(event):
     sender = await event.get_sender()
-    if BOTLOG and not sender.bot:
+    if event.is_private and not (await event.get_sender()).bot:
         chat = await event.get_chat()
-        if chat.id not in NO_PM_LOG_USERS and chat.id != user_id:
+        if chat.id not in NO_PM_LOG_USERS and chat.id:
             try:
-                e = await bot.get_entity(int(BOTLOG_CHATID))
-                fwd_message = await bot.forward_messages(
+                e = await event.client.get_entity(int(BOTLOG_CHATID))
+                fwd_message = await event.client.forward_messages(
                     e,
                     event.message,
                     silent=True
                 )
             except Exception as e:
-                logger.warn(str(e))
-
+                LOGS.warn(str(e))
 
 #@borg.on(admin_cmd(pattern="nolog ?(.*)"))
 @register(pattern="^.nolog(?: |$)(.*)")
