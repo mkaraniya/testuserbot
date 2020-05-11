@@ -1,9 +1,10 @@
-# Thanks to @heyworld for a small correction
-
+#This module was created by @spechide for Uniborg
 """Log PMs
 this will now log chat msgs to your botlog chat id.
 if you don't want chat logs than use `.nolog` .
-enjoy this now."""
+enjoy this now.
+Thanks to @heyworld for a small correction"""
+
 import asyncio
 import os
 from telethon.tl.functions.photos import GetUserPhotosRequest
