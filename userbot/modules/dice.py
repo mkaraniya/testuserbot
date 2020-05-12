@@ -37,8 +37,7 @@ async def _(event):
     emoticon = event.pattern_match.group(2)
     await event.delete()
     r = await reply_message.reply(file=InputMediaDart(emoticon=emoticon))
-        except:
-            pass
+        pass
         
         
 CMD_HELP.update({
