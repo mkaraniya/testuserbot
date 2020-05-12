@@ -2,6 +2,7 @@
 
 
 from telethon.tl.types import InputMediaDice
+from telethon.tl.types import InputMediaDart
 import emoji
 from emoji import *
 from userbot.events import register 
@@ -15,16 +16,30 @@ async def _(event):
         return
     input_str = event.pattern_match.group(1)
     await event.delete()
-    r = await event.reply(file=InputMediaDice())
+    r = await event.reply(file=InputMediaDice(''))
     if input_str:
         try:
             required_number = int(input_str)
             while not r.media.value == required_number:
                 await r.delete()
-                r = await event.reply(file=InputMediaDice())
+                r = await event.reply(file=InputMediaDice(''))
         except:
             pass
 
+        
+@register(outgoing=True, pattern="^.dart(?: |$)(.*)")
+async def _(event):
+    if event.fwd_from:
+        return
+    reply_message = event
+    if event.reply_to_msg_id:
+        reply_message = await event.get_reply_message()
+    emoticon = event.pattern_match.group(2)
+    await event.delete()
+    r = await reply_message.reply(file=InputMediaDart(emoticon=emoticon))
+        except:
+            pass
+        
         
 CMD_HELP.update({
     "dice":
