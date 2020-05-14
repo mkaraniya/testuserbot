@@ -58,7 +58,7 @@ afk_start = {}
 
 AFKSK = str(choice(AFKSTR))
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
-user = await bot.get_me()
+
 # =================================================================
 @register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
 async def set_afk(afk_e):
@@ -72,6 +72,7 @@ async def set_afk(afk_e):
     global afk_start
     global afk_end
     global reason
+    user = await bot.get_me()
     USER_AFK = {}
     afk_time = None
     afk_end = {}
