@@ -141,6 +141,7 @@ async def mention_afk(mention):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    user = await bot.get_me()
     back_alivee = datetime.now()
     afk_end = back_alivee.replace(microsecond=0)
     afk_since = "**a while ago**"
@@ -208,6 +209,7 @@ async def afk_on_pm(sender):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    user = await bot.get_me()
     back_alivee = datetime.now()
     afk_end = back_alivee.replace(microsecond=0)
     afk_since = "**a while ago**"
