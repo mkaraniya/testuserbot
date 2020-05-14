@@ -15,6 +15,8 @@ from platform import python_version, uname
 
 from telethon.events import StopPropagation
 
+from telethon.tl.functions.account import UpdateProfileRequest
+
 from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
                      BOTLOG_CHATID, USERS, PM_AUTO_BAN, ALIVE_NAME)
 from userbot.events import register
@@ -56,7 +58,7 @@ afk_start = {}
 
 AFKSK = str(choice(AFKSTR))
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
-
+user = await bot.get_me()
 # =================================================================
 @register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
 async def set_afk(afk_e):
@@ -80,6 +82,8 @@ async def set_afk(afk_e):
         await afk_e.edit("**Going AFK!**")
     else:
         await afk_e.edit("**Going AFK!**")
+    await afk_e.client(
+        UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name + "[ OFFLINE ]"))
     if BOTLOG:
         await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nYou went AFK!")
     ISAFK = True
@@ -105,6 +109,7 @@ async def type_afk_is_not_true(notafk):
         msg = await notafk.edit("**I'm back !**")
         time.sleep(3)
         await msg.delete()
+        await notafk.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name))
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
