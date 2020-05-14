@@ -18,7 +18,7 @@ from telethon.events import StopPropagation
 from telethon.tl.functions.account import UpdateProfileRequest
 
 from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
-                     BOTLOG_CHATID, USERS, PM_AUTO_BAN, ALIVE_NAME)
+                     BOTLOG_CHATID, USERS, bot, PM_AUTO_BAN, ALIVE_NAME)
 from userbot.events import register
 
 # ========================= CONSTANTS ============================
