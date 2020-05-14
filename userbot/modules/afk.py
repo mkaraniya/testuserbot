@@ -111,7 +111,7 @@ async def type_afk_is_not_true(notafk):
         msg = await notafk.edit("**I'm back !**")
         time.sleep(3)
         await msg.delete()
-        await notafk.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name + "‏‏‎"))
+        await notafk.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name - "[ OFFLINE ]"))
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
