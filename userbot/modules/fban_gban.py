@@ -10,7 +10,7 @@ from telethon.tl.types import MessageEntityMentionName
 
 from userbot import CMD_HELP, bot, is_mongo_alive, is_redis_alive
 from userbot.events import register
-from userbot.modules.dbhelper import (add_chat_fban, add_chat_gban, get_fban,
+from database.dbhelper import (add_chat_fban, add_chat_gban, get_fban,
                                       get_gban, remove_chat_fban,
                                       remove_chat_gban)
 
