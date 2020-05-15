@@ -193,7 +193,7 @@ async def remove_from_gban(chat):
     await chat.edit("`Removed this bot from the Gbanlist!`")
 
 
-CMD_HELP.update({"Fban/Gban":
+CMD_HELP.update({"fban_gban":
     " - `.gban`: Reply to a user to ban them in all the bots provided by you.\n"
     " - `.fban`: Reply to a user to fban them in all the groups provided by you.\n"
     " - `.addfban`: Add this group to the fbanlist.\n"
