@@ -104,6 +104,8 @@ async def type_afk_is_not_true(notafk):
     global afk_start
     global afk_end
     user = await bot.get_me()
+    last = user.last_name
+    last1 = last[:-11]
     back_alive = datetime.now()
     afk_end = back_alive.replace(microsecond=0)
     if ISAFK:
@@ -111,7 +113,7 @@ async def type_afk_is_not_true(notafk):
         msg = await notafk.edit("**I'm back !**")
         time.sleep(3)
         await msg.delete()
-        await notafk.client(UpdateProfileRequest(first_name=user.first_name, last_name=""))
+        await notafk.client(UpdateProfileRequest(first_name=user.first_name, last_name=last1))
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
