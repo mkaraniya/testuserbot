@@ -58,7 +58,7 @@ afk_start = {}
 
 AFKSK = str(choice(AFKSTR))
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
-last_name=user.last_name = str(last_name=user.last_name) if last_name=user.last_name else uname().node
+last_name=user.last_name = str(last_name=user.last_name) if last_name=user.last_name else + " [ OFFLINE ]"
 # =================================================================
 @register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
 async def set_afk(afk_e):
