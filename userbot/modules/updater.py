@@ -29,7 +29,7 @@ async def gen_chlog(repo, diff):
 
 
 async def is_off_br(br):
-    off_br = ['sql-extended', 'staging']
+    off_br = ['sql-extended']
     if br in off_br:
         return 1
     return
