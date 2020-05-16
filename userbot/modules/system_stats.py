@@ -3,6 +3,7 @@
 # Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
 #
+# thanks to penn5 for bug fixing
 """ Userbot module for getting information about the server. """
 
 from asyncio import create_subprocess_exec as asyncrunapp
@@ -116,13 +117,13 @@ async def pipcheck(pip):
                     remove("output.txt")
                     return
                 await pip.edit("**Query: **\n`"
-                               f"pip3 search {pipmodule}""
+                               f"{invokepip}"
                                "`\n**Result: **\n`"
                                f"{pipout}"
                                "`")
             else:
                 await pip.edit("**Query: **\n`"
-                               f"pip3 search {pipmodule}"
+                               f"{invokepip}"
                                "`\n**Result: **\n`No Result Returned/False`")
         else:
             await pip.edit("`Use .help pip to see an example`")
