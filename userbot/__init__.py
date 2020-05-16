@@ -106,6 +106,7 @@ GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN", None)
 
 # OpenWeatherMap API Key
 OPEN_WEATHER_MAP_APPID = os.environ.get("OPEN_WEATHER_MAP_APPID", None)
+print(OPEN_WEATHER_MAP_APPID)
 WEATHER_DEFCITY = os.environ.get("WEATHER_DEFCITY", None)
 
 # Lydia API
@@ -174,10 +175,10 @@ MONGO = MONGOCLIENT.userbot
 def is_mongo_alive():
     try:
         MONGOCLIENT.server_info()
-    except BaseException:
+    except BaseException as e:
+        print(e)
         return False
     return True
-
 
 # Init Redis
 # Redis will be hosted inside the docker container that hosts the bot
@@ -189,7 +190,8 @@ def is_redis_alive():
     try:
         REDIS.ping()
         return True
-    except BaseException:
+    except BaseException as f:
+        print(f)
         return False
 
 
