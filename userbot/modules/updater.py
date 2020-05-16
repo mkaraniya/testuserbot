@@ -119,9 +119,9 @@ async def upstream(ups):
             return
 
         await ups.edit(
-            "`Heroku configuration found! Updater will try to update and restart Paperplane"
-            "automatically if succeeded. Try checking if Paperplane is alive by using the"
-            "\".alive\" command after a few minutes.`")
+            "`Heroku configuration found! Updater will try to update and restart OUB"
+            "automatically if succeeded. Try checking if UserBot is alive by using the"
+            "\".ping\" command after a few minutes.`")
         if not STRING_SESSION:
             repo.git.add('userbot.session', force=True)
         if path.isfile('config.env'):
