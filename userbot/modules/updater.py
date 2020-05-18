@@ -7,62 +7,86 @@
 This module updates the userbot based on Upstream revision
 """
 
+from os import remove, execle, path, makedirs, getenv, environ
+from shutil import rmtree
+import asyncio
 import sys
-from os import execl, remove, path
-import heroku3
 
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 
-from userbot import CMD_HELP, STRING_SESSION
-from userbot import HEROKU_API_KEY as HEROKU_APIKEY
-from userbot import HEROKU_APP_NAME as HEROKU_APPNAME
+from userbot import CMD_HELP, bot, HEROKU_API_KEY, HEROKU_APP_NAME, UPSTREAM_REPO_URL, HEROKU_MEMEZ
 from userbot.events import register
+
+requirements_path = path.join(
+    path.dirname(path.dirname(path.dirname(__file__))), 'requirements.txt')
 
 
 async def gen_chlog(repo, diff):
     ch_log = ''
     d_form = "%d/%m/%y"
     for c in repo.iter_commits(diff):
-        ch_log += f'•[{c.committed_datetime.strftime(d_form)}]: {c.summary} <{c.author}>\n'
+        ch_log += f'•[{c.committed_datetime.strftime(d_form)}]: {c.summary} by <{c.author}>\n'
     return ch_log
 
 
-async def is_off_br(br):
-    off_br = ['sql-extended']
-    if br in off_br:
-        return 1
-    return
+async def update_requirements():
+    reqs = str(requirements_path)
+    try:
+        process = await asyncio.create_subprocess_shell(
+            ' '.join([sys.executable, "-m", "pip", "install", "-r", reqs]),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
+        await process.communicate()
+        return process.returncode
+    except Exception as e:
+        return repr(e)
 
 
-@register(outgoing=True, pattern="^.update(?: |$)(.*)")
+@register(outgoing=True, pattern="^\.update(?: |$)(.*)")
 async def upstream(ups):
     "For .update command, check if the bot is up to date, update if specified"
     await ups.edit("`Checking for updates, please wait....`")
     conf = ups.pattern_match.group(1)
-    off_repo = 'https://github.com/mkaraniya/OpenUserBot.git'
+    off_repo = UPSTREAM_REPO_URL
+    force_update = False
 
     try:
         txt = "`Oops.. Updater cannot continue due to "
-        txt += "some problems.`\n\n**LOGTRACE:**\n"
+        txt += "some problems occured`\n\n**LOGTRACE:**\n"
         repo = Repo()
     except NoSuchPathError as error:
         await ups.edit(f'{txt}\n`directory {error} is not found`')
-        return
-    except InvalidGitRepositoryError as error:
-        await ups.edit(f'{txt}\n`directory {error} does \
-                        not seems to be a git repository`')
+        repo.__del__()
         return
     except GitCommandError as error:
         await ups.edit(f'{txt}\n`Early failure! {error}`')
+        repo.__del__()
         return
+    except InvalidGitRepositoryError as error:
+        if conf != "now":
+            await ups.edit(
+                f"`Unfortunately, the directory {error} does not seem to be a git repository.\
+            \nBut we can fix that by force updating the userbot using .update now.`"
+            )
+            return
+        repo = Repo.init()
+        origin = repo.create_remote('upstream', off_repo)
+        origin.fetch()
+        force_update = True
+        repo.create_head('sql-extended', origin.refs.sql-extended)
+        repo.heads.sql-extended.set_tracking_branch(origin.refs.sql-extended)
+        repo.heads.sql-extended.checkout(True)
+        
 
     ac_br = repo.active_branch.name
-    if not await is_off_br(ac_br):
+    if ac_br != 'sql-extended':
         await ups.edit(
             f'**[UPDATER]:**` Looks like you are using your own custom branch ({ac_br}). '
-            'In that case, Updater is unable to perform a successful update. '
-            'Please checkout to any official branch.`')
+            'in that case, Updater is unable to identify '
+            'which branch is to be merged. '
+            'please checkout to any official branch`')
+        repo.__del__()
         return
 
     try:
@@ -72,13 +96,16 @@ async def upstream(ups):
 
     ups_rem = repo.remote('upstream')
     ups_rem.fetch(ac_br)
+
     changelog = await gen_chlog(repo, f'HEAD..upstream/{ac_br}')
 
-    if not changelog:
-        await ups.edit(f'\n`Your BOT is `**up-to-date**` with `**{ac_br}**\n')
+    if not changelog and not force_update:
+        await ups.edit(
+            f'\n`Dont worry your BOT is` **updated-af🤘🤘**\n`BRANCH:`**{ac_br}**\n')
+        repo.__del__()
         return
 
-    if conf != "now":
+    if conf != "now" and not force_update:
         changelog_str = f'**New UPDATE available for [{ac_br}]:\n\nCHANGELOG:**\n`{changelog}`'
         if len(changelog_str) > 4096:
             await ups.edit("`Changelog is too big, view the file to see it.`")
@@ -93,81 +120,75 @@ async def upstream(ups):
             remove("output.txt")
         else:
             await ups.edit(changelog_str)
-        await ups.respond('Use the \`.update now`\ command to update')
+        await ups.respond('`do \".update now\" to update`')
         return
 
-    await ups.edit('`New update found, updating...`')
-
-    ups_rem.fetch(ac_br)
-    repo.git.reset('--hard', 'FETCH_HEAD')
-
-    if HEROKU_APIKEY != None:
-        # Heroku configuration, which can rebuild the Docker image with newer changes
-        heroku = heroku3.from_key(HEROKU_APIKEY)
-        if HEROKU_APPNAME != None:
-            try:
-                heroku_app = heroku.apps()[HEROKU_APPNAME]
-            except KeyError:
-                await ups.edit(
-                    "```Error: HEROKU_APPNAME config is invalid! Make sure an app with that "
-                    "name exists and your HEROKU_APIKEY config is correct.```")
-                return
-        else:
-            await ups.edit(
-                "```Error: HEROKU_APPNAME config is not set! Make sure to set your "
-                "Heroku Application name in the config.```")
-            return
-
+    if force_update:
         await ups.edit(
-            "`Heroku configuration found! Updater will try to update and restart OUB"
-            "automatically if succeeded. Try checking if UserBot is alive by using the"
-            "\".ping\" command after a few minutes.`")
-        if not STRING_SESSION:
-            repo.git.add('userbot.session', force=True)
-        if path.isfile('config.env'):
-            repo.git.add('config.env', force=True)
-
-        # Set git config for commiting session and config
-        repo.config_writer().set_value("user", "name",
-                                       "OpenUserBot Updater").release()
-        repo.config_writer().set_value("user", "email",
-                                       "<>").release()  # No Email
-
-        # Make a new commit with session and commit (if they exist), this is only temporary to move them to the Docker image
-        # Allow empty commit if there is nothing to commit (string session + env vars)
-        repo.git.commit(
-            "-m 'Commit userbot.session and config.env' --allow-empty")
-
-        heroku_remote_url = heroku_app.git_url.replace(
-            "https://", f"https://api:{HEROKU_APIKEY}@")
-
-        remote = None
-        if 'heroku' in repo.remotes:
-            remote = repo.remote('heroku')
-            remote.set_url(heroku_remote_url)
+            '`Force-Syncing to latest stable userbot code, please wait...`')
+    else:
+        await ups.edit('`Updating userbot, please wait....`')
+    # We're in a Heroku Dyno, handle it's memez.
+    if HEROKU_API_KEY is not None:
+        import heroku3
+        heroku = heroku3.from_key(HEROKU_API_KEY)
+        heroku_app = None
+        heroku_applications = heroku.apps()
+        if not HEROKU_APP_NAME:
+            await ups.edit(
+                '`[HEROKU MEMEZ] Please set up the HEROKU_APP_NAME variable to be able to update userbot.`'
+            )
+            repo.__del__()
+            return
+        for app in heroku_applications:
+            if app.name == HEROKU_APP_NAME:
+                heroku_app = app
+                break
+        if heroku_app is None:
+            await ups.edit(
+                f'{txt}\n`Invalid Heroku credentials for updating userbot dyno.`'
+            )
+            repo.__del__()
+            return
+        await ups.edit('`[HEROKU MEMEZ]\
+                        \nUserbot dyno build in progress, please wait for it to complete.`'
+                       )
+        ups_rem.fetch(ac_br)
+        repo.git.reset("--hard", "FETCH_HEAD")
+        heroku_git_url = heroku_app.git_url.replace(
+            "https://", "https://api:" + HEROKU_API_KEY + "@")
+        if "heroku" in repo.remotes:
+            remote = repo.remote("heroku")
+            remote.set_url(heroku_git_url)
         else:
-            remote = repo.create_remote('heroku', heroku_remote_url)
-
+            remote = repo.create_remote("heroku", heroku_git_url)
         try:
             remote.push(refspec="HEAD:refs/heads/sql-extended", force=True)
-        except GitCommandError as e:
-            await ups.edit(f'{txt}\n`Early failure! {e}`')
+        except GitCommandError as error:
+            await ups.edit(f'{txt}\n`Here is the error log:\n{error}`')
+            repo.__del__()
             return
+        await ups.edit('`Successfully Updated!\n'
+                       'Restarting, please wait for 3-4 mins. Type `.alive` to check if bot is working or not `')
     else:
-        # Heroku configs not set, just restart the bot
-        await ups.edit(
-            '`Successfully Updated!\n'
-            'OUB is restarting... Wait for a few seconds, then '
-            'check if UserBot is alive by using the ".ping" command.`')
-
-        await ups.client.disconnect()
+        # Classic Updater, pretty straightforward.
+        try:
+            ups_rem.pull(ac_br)
+        except GitCommandError:
+            repo.git.reset("--hard", "FETCH_HEAD")
+        reqs_upgrade = await update_requirements()
+        await ups.edit('`Successfully Updated!\n'
+                       'Bot is restarting... Wait for a second!`')
         # Spin a new instance of bot
-        execl(sys.executable, sys.executable, *sys.argv)
-        # Shut the existing one down
-        exit()
+        args = [sys.executable, "-m", "userbot"]
+        execle(sys.executable, *args, environ)
+        return
 
 
-CMD_HELP.update({"Updater":
-    " - `.update`: Check if the main repository has any updates and show changelog if so."
-    " - `.update now`: Update UserBot if there are any updates available."
+CMD_HELP.update({
+    'update':
+    "`.update`\
+\nUsage: Checks if the main userbot repository has any updates and shows a changelog if so.\
+\n\n`.update now`\
+\nUsage: Updates your userbot, if there are any updates in the main userbot repository."
 })
