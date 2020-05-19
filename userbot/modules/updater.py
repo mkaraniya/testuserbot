@@ -1,7 +1,8 @@
 # Copyright (C) 2019 The Raphielscape Company LLC.
 #
-# Licensed under the Raphielscape Public License, Version 1.d (the "License");
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
 # you may not use this file except in compliance with the License.
+# credits to @AvinashReddy3108
 #
 """
 This module updates the userbot based on Upstream revision
@@ -77,7 +78,6 @@ async def upstream(ups):
         repo.create_head('sql-extended', origin.refs.sql-extended)
         repo.heads.sql-extended.set_tracking_branch(origin.refs.sql-extended)
         repo.heads.sql-extended.checkout(True)
-        
 
     ac_br = repo.active_branch.name
     if ac_br != 'sql-extended':
@@ -101,7 +101,7 @@ async def upstream(ups):
 
     if not changelog and not force_update:
         await ups.edit(
-            f'\n`Dont worry your BOT is` **updated-af🤘🤘**\n`BRANCH:`**{ac_br}**\n')
+            f'\n`Your BOT is`  **up-to-date**  `with`  **{ac_br}**\n')
         repo.__del__()
         return
 
@@ -120,7 +120,7 @@ async def upstream(ups):
             remove("output.txt")
         else:
             await ups.edit(changelog_str)
-        await ups.respond('`do \".update now\" to update`')
+        await ups.respond('do \"`.update now`\" to update')
         return
 
     if force_update:
@@ -169,7 +169,7 @@ async def upstream(ups):
             repo.__del__()
             return
         await ups.edit('`Successfully Updated!\n'
-                       'Restarting, please wait for 3-4 mins. Type `.alive` to check if bot is working or not `')
+                       'Restarting, please wait...`')
     else:
         # Classic Updater, pretty straightforward.
         try:
@@ -187,8 +187,8 @@ async def upstream(ups):
 
 CMD_HELP.update({
     'update':
-    "`.update`\
+    ".update\
 \nUsage: Checks if the main userbot repository has any updates and shows a changelog if so.\
-\n\n`.update now`\
+\n\n.update now\
 \nUsage: Updates your userbot, if there are any updates in the main userbot repository."
 })
