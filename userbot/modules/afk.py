@@ -83,7 +83,6 @@ async def set_afk(afk_e):
         AFKREASON = string
         await afk_e.edit("**Going AFK!**")
     else:
-        AFKSKR = AFKSK
         await afk_e.edit("**Going AFK!**")
     if user.last_name:
         await afk_e.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name + " [ OFFLINE ]"))
@@ -192,7 +191,7 @@ async def mention_afk(mention):
                 USERS.update({mention.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif mention.sender_id in USERS:
-                if USERS[mention.sender_id] % randint(2, 4) == 0:
+                if USERS[mention.sender_id] % randint(2, 4) is 0:
                     if AFKREASON:
                         await mention.reply(f"My Master **{DEFAULTUSER}** Is **afk since** {afk_since}.\
                             \n**Because my King is** `{AFKREASON}`")
@@ -268,7 +267,7 @@ async def afk_on_pm(sender):
                 USERS.update({sender.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif apprv and sender.sender_id in USERS:
-                if USERS[sender.sender_id] % randint(2, 4) == 0:
+                if USERS[sender.sender_id] % randint(2, 4) is 0:
                     if AFKREASON:
                         await sender.reply(f"My Master **{DEFAULTUSER}** Is **afk since** {afk_since}.\
                             \n**Because my King is** `{AFKREASON}`")
