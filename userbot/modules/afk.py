@@ -83,7 +83,7 @@ async def set_afk(afk_e):
         AFKREASON = string
         await afk_e.edit("**Going AFK!**")
     else:
-        AFKREASON = {AFKSK}
+        AFKREASON = AFKSK
         await afk_e.edit("**Going AFK!**")
     if user.last_name:
         await afk_e.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name + " [ OFFLINE ]"))
