@@ -1,297 +1,228 @@
-# TG-UserBot - A modular Telegram UserBot script for Python.
-# Copyright (C) 2019  Kandarp <https://github.com/kandnub>
-#
-# TG-UserBot is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# TG-UserBot is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with TG-UserBot.  If not, see <https://www.gnu.org/licenses/>.
+# Credits to https://t.me/anubisxx for this plugin
+# Offline / Online credits to https://t.me/DevP73
 
+
+import asyncio
+from asyncio import sleep
 import datetime
-import os
+from datetime import datetime
+import shutil 
+import random, re
+from random import choice, randint
 import time
-import random
+from time import gmtime, strftime
+from datetime import timedelta
+from datetime import datetime
+from telethon import events
+from telethon.tl import functions, types
+from telethon.events import StopPropagation
+from telethon.tl.functions.account import UpdateProfileRequest
+from platform import python_version, uname
 
 from telethon.events import StopPropagation
-from telethon.tl import types, functions
-from typing import Tuple
 
-from userbot import register
-from userbot.plugins import plugins_data
-from userbot.utils.helpers import _humanfriendly_seconds, get_chat_link
-from userbot.utils.events import NewMessage
+from telethon.tl.functions.account import UpdateProfileRequest
 
-DEFAULT_MUTE_SETTINGS = types.InputPeerNotifySettings(
-    silent=True, mute_until=datetime.timedelta(days=365))
+from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
+                     BOTLOG_CHATID, USERS, bot, PM_AUTO_BAN, ALIVE_NAME)
+from userbot.events import register
 
-AFK = plugins_data.AFK
-AFK.privates = plugins_data.load_data('userbot_afk_privates')
-AFK.groups = plugins_data.load_data('userbot_afk_groups')
-AFK.sent = plugins_data.load_data('userbot_afk_sent')
 
-going_afk = "`AFK AF!`"
-going_afk_reason = going_afk + "\n**Reason:** __{reason}.__"
-not_afk = "`I am no longer AFK!`"
-currently_afk_reason = ("`I am currently AFK!`\
-    \n**Last seen:** __{elapsed} ago.__\
-    \n**Reason:** __{reason}.__")
 
-AFKMEMEZ = [
-    "You missed me, next time aim better.",
-    "Me no here, Me go bye.\nLeave me message. Me reply.",
-    "I'll be back in a few minutes and if I'm not...,\nwait longer.",
-    "I'm not here right now, so I'm probably somewhere else.",
-    "Roses are red, violets are blue.\
-        \nLeave me a message, and I'll get back to you.",
-    "I'll be right back,\nbut if I'm not right back,\nI'll be back later.",
-    "If you haven't figured it out already,\nI'm not here.",
-    "Hello, welcome to my away message, how may I ignore you today?",
-    "You know the drill, you leave a message, and I'll ignore it.",
-    "I'm away from the keyboard at the moment,\
-        \nbut if you'll scream loud enough at your screen,\
-        \nI might just hear you.",
-    "I went that way\n---->",
-    "<Insert witty away message here.>",
-    "This is an away message and I am away... so leave a message.",
-    "I went this way\n<----",
-    "If I were here,\nI'd tell you where I am.\
-        \nBut I'm not,\nso ask me when I return...",
-    "I am away!\nI don't know when I'll be back!\
-        \nHopefully a few minutes from now!",
-    "I bet you were expecting an away message!",
-    "Life is so short, there are so many things to do...\
-        \nI'm away doing one of them..",
-    "I am not here right now...\nbut if I was...\n\nwouldn't that be awesome?",
+# ========================= CONSTANTS ============================
+AFKSTR = [
+    "`I'm busy right now. Please talk in a bag and when I come back you can just give me the bag!`",
+    "I'm away right now. If you need anything, leave a message after the beep:\n`beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep`!",
+    "`You missed me, next time aim better.`",
+    "`I'll be back in a few minutes and if I'm not...,\nwait longer.`",
+    "`I'm not here right now, so I'm probably somewhere else.`",
+    "`Roses are red,\nViolets are blue,\nLeave me a message,\nAnd I'll get back to you.`",
+    "`Sometimes the best things in life are worth waiting for…\nI'll be right back.`",
+    "`I'll be right back,\nbut if I'm not right back,\nI'll be back later.`",
+    "`If you haven't figured it out already,\nI'm not here.`",
+    "`Hello, welcome to my away message, how may I ignore you today?`",
+    "`I'm away over 7 seas and 7 countries,\n7 waters and 7 continents,\n7 mountains and 7 hills,\n7 plains and 7 mounds,\n7 pools and 7 lakes,\n7 springs and 7 meadows,\n7 cities and 7 neighborhoods,\n7 blocks and 7 houses...\n\nWhere not even your messages can reach me!`",
+    "`I'm away from the keyboard at the moment, but if you'll scream loud enough at your screen, I might just hear you.`",
+    "`I went that way\n---->`",
+    "`I went this way\n<----`",
+    "`Please leave a message and make me feel even more important than I already am.`",
+    "`I am not here so stop writing to me,\nor else you will find yourself with a screen full of your own messages.`",
+    "`If I were here,\nI'd tell you where I am.\n\nBut I'm not,\nso ask me when I return...`",
+    "`I am away!\nI don't know when I'll be back!\nHopefully a few minutes from now!`",
+    "`I'm not available right now so please leave your name, number, and address and I will stalk you later.`",
+    "`Sorry, I'm not here right now.\nFeel free to talk to my userbot as long as you like.\nI'll get back to you later.`",
+    "`I bet you were expecting an away message!`",
+    "`Life is so short, there are so many things to do...\nI'm away doing one of them..`",
+    "`I am not here right now...\nbut if I was...\n\nwouldn't that be awesome?`",
 ]
+# ============================================
+
+# ================= CONSTANT =================
+DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
+AFKSK = str(choice(AFKSTR))
+# ============================================
+
+global USER_AFK  # pylint:disable=E0602
+global afk_time  # pylint:disable=E0602
+global last_afk_message  # pylint:disable=E0602
+global afk_start
+global afk_end
+USER_AFK = {}
+afk_time = None
+last_afk_message = {}
+afk_start = {}
 
 
-# =================================================================
+#@borg.on(events.NewMessage(pattern=r"\.afk ?(.*)", outgoing=True))  # pylint:disable=E0602
 @register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
-async def awayfromkeyboard(event: NewMessage.Event) -> None:
-    """Set your status as AFK until you send a message again."""
-    arg = event.matches[0].group(1)
-    curtime = time.time().__str__()
-    os.environ['userbot_afk'] = f"{curtime}/{event.chat_id}/{event.id}"
-    extra = await get_chat_link(event, event.id)
-    log = ("afk", f"You just went AFK in {extra}!")
-    if arg:
-        arg = arg.strip()
-        os.environ['userbot_afk_reason'] = arg
-        await event.resanswer(going_afk_reason,
-                              plugin='afk',
-                              name='going_afk_reason',
-                              formats={'reason': arg},
-                              log=log)
-    else:
-        await event.resanswer(going_afk,
-                              plugin='afk',
-                              name='going_afk',
-                              log=log)
-    raise StopPropagation
-    
-
-
-@register(incoming=True, disable_edited=True)
-async def inc_listner(event: NewMessage.Event) -> None:
-    """Handle tags and new messages by listening to new incoming messages."""
-    sender = await event.get_sender()
-    if event.from_scheduled or (isinstance(sender, types.User) and sender.bot):
+async def _(event):
+    if event.fwd_from:
         return
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    global afk_start
+    global afk_end
+    global reason
+    user = await bot.get_me()
+    USER_AFK = {}
+    afk_time = None
+    last_afk_message = {}
+    afk_end = {}
+    start_1 = datetime.now()
+    afk_start = start_1.replace(microsecond=0)
+    reason = event.pattern_match.group(1)
+    if not USER_AFK:  # pylint:disable=E0602
+        last_seen_status = await bot(  # pylint:disable=E0602
+            functions.account.GetPrivacyRequest(
+                types.InputPrivacyKeyStatusTimestamp()
+            )
+        )
+        if isinstance(last_seen_status.rules, types.PrivacyValueAllowAll):
+            afk_time = datetime.datetime.now()  # pylint:disable=E0602
+        USER_AFK = f"yes: {reason}"  # pylint:disable=E0602
+        if reason:
+            await bot.send_message(event.chat_id, f"**My King 👑 {DEFAULTUSER} 👑 is Going afk!** __because My Master is {reason}__")
+        else:
+            await bot.send_message(event.chat_id, f"**My King 👑 {DEFAULTUSER} 👑 is Going afk!** __because My Master is {AFKSK}__")
+    if user.last_name:
+        await event.client(UpdateProfileRequest(first_name=user.first_name, last_name=user.last_name + " [ OFFLINE ]"))
+    else:
+        await event.client(UpdateProfileRequest(first_name=user.first_name, last_name=" [ OFFLINE ]"))
+  #      await asyncio.sleep(5)
+  #      await event.delete()
+        try:
+            await bot.send_message(  # pylint:disable=E0602
+                Config.PRIVATE_GROUP_BOT_API_ID,  # pylint:disable=E0602
+                f"Set AFK mode to True, and Reason is {reason}"
+            )
+        except Exception as e:  # pylint:disable=C0103,W0703
+            logger.warn(str(e))  # pylint:disable=E0602
 
-    afk = os.environ.get('userbot_afk', False)
-    if not (afk and (event.is_private or event.mentioned)):
+
+# @borg.on(events.NewMessage(outgoing=True))  # pylint:disable=E0602
+@register(outgoing=True)
+async def set_not_afk(event):
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    global afk_start
+    global afk_end
+    user = await bot.get_me()
+    last = user.last_name
+    if last and last.endswith(" [ OFFLINE ]"):
+        last1 = last[:-12]
+    else:
+        last1 = ""
+    back_alive = datetime.now()
+    afk_end = back_alive.replace(microsecond=0)
+    total_afk_time = str(afk_end - afk_start)
+    current_message = event.message.message
+    if ".afk" not in current_message and "yes" in USER_AFK:  # pylint:disable=E0602
+        shite = await bot.send_message(event.chat_id, "__My Master is Back!__\n**He is No Longer afk.**\n `Was afk for:``" + total_afk_time + "`")
+        await event.client(UpdateProfileRequest(first_name=user.first_name, last_name=last1))
+        try:
+            await bot.send_message(  # pylint:disable=E0602
+                Config.PRIVATE_GROUP_BOT_API_ID,  # pylint:disable=E0602
+                "Set AFK mode to False"
+            )
+        except Exception as e:  # pylint:disable=C0103,W0703
+            await bot.send_message(  # pylint:disable=E0602
+                event.chat_id,
+                "Please set `PRIVATE_GROUP_BOT_API_ID` " + \
+                "for the proper functioning of afk functionality " + \
+                "ask in related group for more info.\n\n `{}`".format(str(e)),
+                reply_to=event.message.id,
+                silent=True
+            )
+        await asyncio.sleep(5)
+        await shite.delete()
+        USER_AFK = {}  # pylint:disable=E0602
+        afk_time = None  # pylint:disable=E0602
+
+
+# @borg.on(events.NewMessage(  # pylint:disable=E0602
+@register(incoming=True, disable_edited=True
+#    incoming=True,
+    func=lambda e: bool(e.mentioned or e.is_private))
+#))
+async def on_afk(event):
+    if event.fwd_from:
         return
-
-    since = datetime.datetime.fromtimestamp(float(afk.split('/')[0]),
-                                            tz=datetime.timezone.utc)
-    now = datetime.datetime.now(datetime.timezone.utc)
-    reason = os.environ.get('userbot_afk_reason', False)
-    elapsed = await _humanfriendly_seconds((now - since).total_seconds())
-    chat = await event.get_chat()
-    if event.is_private:
-        await _append_msg(AFK.privates, chat.id, event.id)
-    else:
-        await _append_msg(AFK.groups, chat.id, event.id)
-
-    if chat.id in AFK.sent:
-        # Floodwait prevention, in case some retards spam tag/PM you.
-        timeout = random.randint(15, 60)
-        if round((now - AFK.sent[chat.id][-1][1]).total_seconds()) <= timeout:
-            return
-
-    if reason:
-        result = await event.resanswer(currently_afk_reason,
-                                       plugin='afk',
-                                       name='currently_afk_reason',
-                                       formats={
-                                           'elapsed': elapsed,
-                                           'reason': reason
-                                       },
-                                       reply_to=None)
-    else:
-        result = await event.resanswer(
-            f"**{random.choice(AFKMEMEZ)}**\n__Last seen: {elapsed} ago.__",
-            plugin='afk',
-            name='currently_afk',
-            formats={'elapsed': elapsed},
-            reply_to=None)
-    AFK.sent.setdefault(chat.id, []).append((result.id, result.date))
-
-
-async def _append_msg(variable: dict, chat: int, event: int) -> None:
-    if chat in variable:
-        variable[chat]['mentions'].append(event)
-    else:
-        notif = await client(
-            functions.account.GetNotifySettingsRequest(peer=chat))
-        notif = types.InputPeerNotifySettings(**vars(notif))
-        await _update_notif_settings(chat)
-        async for dialog in client.iter_dialogs():
-            if chat == dialog.entity.id:
-                title = getattr(dialog, 'title', dialog.name)
-                unread_count = dialog.unread_count
-                last_msg = dialog.message.id
-                break
-        x = 1
-        messages = []
-        async for message in client.iter_messages(chat, max_id=last_msg):
-            if x >= unread_count:
-                if not messages:
-                    messages.append(message.id)
-                break
-            if not message.out:
-                x = x + 1
-                messages.append(message.id)
-        variable[chat] = {
-            'title': title,
-            'unread_from': messages[-1],
-            'mentions': [event],
-            'PeerNotifySettings': notif
-        }
-        messages.clear()
-
-
-async def _update_notif_settings(
-        peer: int,
-        settings: types.InputPeerNotifySettings = DEFAULT_MUTE_SETTINGS
-) -> None:
-    await client(
-        functions.account.UpdateNotifySettingsRequest(peer=peer,
-                                                      settings=settings))
-
-
-async def _correct_grammer(mentions: int,
-                           chats: int) -> Tuple[str, str, str, str]:
-    a1 = "one" if mentions == 1 else mentions
-    a2 = '' if mentions == 1 else 's'
-    a3 = "one" if chats == 1 else chats
-    a4 = '' if chats == 1 else 's'
-    return a1, a2, a3, a4
-
-@register(incoming=True, disable_errors=True)
-async def inc_listner(event: NewMessage.Event) -> None:
-    """Handle tags and new messages by listening to new incoming messages."""
-    sender = await event.get_sender()
-    if event.from_scheduled or (isinstance(sender, types.User) and sender.bot):
-        return
-
-    afk = os.environ.get('userbot_afk', False)
-    if not (afk and (event.is_private or event.mentioned)):
-        return
-
-    since = datetime.datetime.fromtimestamp(float(afk.split('/')[0]),
-                                            tz=datetime.timezone.utc)
-    now = datetime.datetime.now(datetime.timezone.utc)
-    reason = os.environ.get('userbot_afk_reason', False)
-    elapsed = await _humanfriendly_seconds((now - since).total_seconds())
-    chat = await event.get_chat()
-    if event.is_private:
-        await _append_msg(AFK.privates, chat.id, event.id)
-    else:
-        await _append_msg(AFK.groups, chat.id, event.id)
-
-    if chat.id in AFK.sent:
-        # Floodwait prevention, in case some retards spam tag/PM you.
-        timeout = random.randint(15, 60)
-        if round((now - AFK.sent[chat.id][-1][1]).total_seconds()) <= timeout:
-            return
-
-    if reason:
-        result = await event.resanswer(currently_afk_reason,
-                                       plugin='afk',
-                                       name='currently_afk_reason',
-                                       formats={
-                                           'elapsed': elapsed,
-                                           'reason': reason
-                                       },
-                                       reply_to=None)
-    else:
-        result = await event.resanswer(
-            f"**{random.choice(AFKMEMEZ)}**\n__Last seen: {elapsed} ago.__",
-            plugin='afk',
-            name='currently_afk',
-            formats={'elapsed': elapsed},
-            reply_to=None)
-    AFK.sent.setdefault(chat.id, []).append((result.id, result.date))
-
-
-async def _append_msg(variable: dict, chat: int, event: int) -> None:
-    if chat in variable:
-        variable[chat]['mentions'].append(event)
-    else:
-        notif = await client(
-            functions.account.GetNotifySettingsRequest(peer=chat))
-        notif = types.InputPeerNotifySettings(**vars(notif))
-        await _update_notif_settings(chat)
-        async for dialog in client.iter_dialogs():
-            if chat == dialog.entity.id:
-                title = getattr(dialog, 'title', dialog.name)
-                unread_count = dialog.unread_count
-                last_msg = dialog.message.id
-                break
-        x = 1
-        messages = []
-        async for message in client.iter_messages(chat, max_id=last_msg):
-            if x >= unread_count:
-                if not messages:
-                    messages.append(message.id)
-                break
-            if not message.out:
-                x = x + 1
-                messages.append(message.id)
-        variable[chat] = {
-            'title': title,
-            'unread_from': messages[-1],
-            'mentions': [event],
-            'PeerNotifySettings': notif
-        }
-        messages.clear()
-
-
-async def _update_notif_settings(
-        peer: int,
-        settings: types.InputPeerNotifySettings = DEFAULT_MUTE_SETTINGS
-) -> None:
-    await client(
-        functions.account.UpdateNotifySettingsRequest(peer=peer,
-                                                      settings=settings))
-
-
-async def _correct_grammer(mentions: int,
-                           chats: int) -> Tuple[str, str, str, str]:
-    a1 = "one" if mentions == 1 else mentions
-    a2 = '' if mentions == 1 else 's'
-    a3 = "one" if chats == 1 else chats
-    a4 = '' if chats == 1 else 's'
-    return a1, a2, a3, a4
-    
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    global afk_start
+    global afk_end
+    back_alivee = datetime.now()
+    afk_end = back_alivee.replace(microsecond=0)
+    total_afk_time = str(afk_end - afk_start)
+    afk_since = "**a while ago**"
+    current_message_text = event.message.message.lower()
+    if "afk" in current_message_text:
+        # userbot's should not reply to other userbot's
+        # https://core.telegram.org/bots/faq#why-doesn-39t-my-bot-see-messages-from-other-bots
+        return False
+    if USER_AFK and not (await event.get_sender()).bot:  # pylint:disable=E0602
+        if afk_time:  # pylint:disable=E0602
+            now = datetime.datetime.now()
+            datime_since_afk = now - afk_time  # pylint:disable=E0602
+            time = float(datime_since_afk.seconds)
+            days = time // (24 * 3600)
+            time = time % (24 * 3600)
+            hours = time // 3600
+            time %= 3600
+            minutes = time // 60
+            time %= 60
+            seconds = time
+            if days == 1:
+                afk_since = "**Yesterday**"
+            elif days > 1:
+                if days > 6:
+                    date = now + \
+                        datetime.timedelta(
+                            days=-days, hours=-hours, minutes=-minutes)
+                    afk_since = date.strftime("%A, %Y %B %m, %H:%I")
+                else:
+                    wday = now + datetime.timedelta(days=-days)
+                    afk_since = wday.strftime('%A')
+            elif hours > 1:
+                afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
+            elif minutes > 0:
+                afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
+            else:
+                afk_since = f"`{int(seconds)}s` **ago**"
+        msg = None
+        message_to_reply = f"My Master {DEFAULTUSER} Is {reason} **Since** {total_afk_time}" + \
+            f"\n__and HE may be back soon__\n**Just wait for my King's Reply" \
+            if reason \
+            else f"My King 👑 {DEFAULTUSER} 👑 is **afk Since** {total_afk_time}. \nand My King has left a word for you only: \n{AFKSK}\n`.` "
+        msg = await event.reply(message_to_reply)
+        await asyncio.sleep(5)
+        if event.chat_id in last_afk_message:  # pylint:disable=E0602
+            await last_afk_message[event.chat_id].delete()  # pylint:disable=E0602
+        last_afk_message[event.chat_id] = msg  # pylint:disable=E0602
+        
 
 CMD_HELP.update({
     "afk":
