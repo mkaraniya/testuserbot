@@ -72,6 +72,8 @@ async def set_afk(afk_e):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    if not is_redis_alive():
+        return
     user = await bot.get_me()
     global reason
     USER_AFK = {}
@@ -107,6 +109,8 @@ async def type_afk_is_not_true(notafk):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    if not is_redis_alive():
+        return
     user = await bot.get_me()
     last = user.last_name
     if last and last.endswith(" [ OFFLINE ]"):
@@ -150,6 +154,8 @@ async def mention_afk(mention):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    if not is_redis_alive():
+        return
     user = await bot.get_me()
     back_alivee = datetime.now()
     afk_end = back_alivee.replace(microsecond=0)
@@ -218,6 +224,8 @@ async def afk_on_pm(sender):
     global afk_time  # pylint:disable=E0602
     global afk_start
     global afk_end
+    if not is_redis_alive():
+        return
     user = await bot.get_me()
     back_alivee = datetime.now()
     afk_end = back_alivee.replace(microsecond=0)
