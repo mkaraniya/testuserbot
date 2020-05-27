@@ -39,4 +39,4 @@ await e.edit("Please specify which module do you want help for !!\
         for i in CMD_HELP:
             string += "`" + str(i)
             string += "`\n"
-        await event.reply(string)
+        await e.reply(string)
