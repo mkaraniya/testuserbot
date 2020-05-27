@@ -35,18 +35,14 @@ async def help(event):
 "\n• 𝗥𝗲𝘁𝗮𝗿𝗱𝗲𝗱: `lydia`, `repeat`,  `spam`, `sed`"
 "\n• 𝗘𝘃𝗮𝗹𝗮𝘁𝗼𝗿𝘀: `eval`, `exec`, `term`, `pip`"
 "\n• 𝗚𝗶𝘁𝗵𝘂𝗯: `git`, `gcommit`, `heroku`, `repo`, `myrepo`"
-"\n• 𝗪𝗲𝗯: `google` `reverse`, `img`, `w3m`, `weather`, `speed`, `dc`, `ping`"
+"\n• 𝗪𝗲𝗯: `google` `reverse`, `img`, `w3m`, `weather`, `speed`, `dc`, `ping`, `instagram`"
 "\n• 𝗨𝗽𝗹𝗼𝗮𝗱 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱: `direct`, `aria`, `aria2`, `gdrive`, `mega`, `rip`, `download`, `webupload`"
-"\n• 𝗖𝗼𝘃𝗶𝗱: `cod19`"
+"\n• 𝗖𝗼𝘃𝗶𝗱: `cod`"
 "\n• 𝗨𝘀𝗲𝗿𝗯𝗼𝘁: `useitoub`, `sleep`, `shutdown`, `restart`, `anti_spambot`, `sysd`, `botver`, `alive`, `dbs`, `creator`, `readme`, `time`, `date`" 
 "\n• 𝗦𝘁𝗶𝗰𝗸𝗲𝗿𝘀: `stickers`"  
 "\n• 𝗠𝘂𝘀𝗶𝗰: `song`, `lyrics`"
 "\n  --  " 
 "\n• **Please specify which module do you want help for !!**"
 "\n**Usage:** `.help <module name> to know how it works`")
-        string = ""
-        for i in CMD_HELP:
-            string += "`" + str(i)
-            string += "`  -  "
-        await event.reply(string)
+        
         
