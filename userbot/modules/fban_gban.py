@@ -17,7 +17,7 @@ from userbot.modules.dbhelper import (add_chat_fban, add_chat_gban, get_fban,
 
 @register(outgoing=True, pattern="^.gban")
 async def gban_all(msg):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await msg.edit("`Database connecting please wait!`")
        # return
     textx = await msg.get_reply_message()
@@ -76,7 +76,7 @@ async def gban_all(msg):
 
 @register(outgoing=True, pattern="^.fban")
 async def fedban_all(msg):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await msg.edit("`Database connecting please wait!`")
         return
     textx = await msg.get_reply_message()
@@ -158,7 +158,7 @@ async def fedban_all(msg):
 
 @register(outgoing=True, pattern="^.addfban")
 async def add_to_fban(chat):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await chat.edit("`Database connecting please wait!`")
         return
     await add_chat_fban(chat.chat_id)
@@ -167,7 +167,7 @@ async def add_to_fban(chat):
 
 @register(outgoing=True, pattern="^.addgban")
 async def add_to_gban(chat):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await chat.edit("`Database connecting please wait!`")
         return
     await add_chat_gban(chat.chat_id)
@@ -177,7 +177,7 @@ async def add_to_gban(chat):
 
 @register(outgoing=True, pattern="^.removefban")
 async def remove_from_fban(chat):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await chat.edit("`Database connecting please wait!`")
         return
     await remove_chat_fban(chat.chat_id)
@@ -186,7 +186,7 @@ async def remove_from_fban(chat):
 
 @register(outgoing=True, pattern="^.removegban")
 async def remove_from_gban(chat):
-    if is_mongo_alive() or is_redis_alive():
+    if is_mongo_alive():
         await chat.edit("`Database connecting please wait!`")
         return
     await remove_chat_gban(chat.chat_id)
