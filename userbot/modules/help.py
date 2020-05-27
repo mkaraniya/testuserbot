@@ -5,15 +5,23 @@
 #
 """ Userbot help command """
 
-from userbot.events import register
 from telethon import events
 import asyncio
+from userbot.events import register
+from userbot import CMD_HELP
 
 
-@register(outgoing=True, pattern="^.help$")
-async def help(e):
-    if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
-        await e.edit("\nAvailable Modules:"
+@register(outgoing=True, pattern="^.help(?: |$)(.*)")
+async def help(event):
+    """ For .help command,"""
+    args = event.pattern_match.group(1).lower()
+    if args:
+        if args in CMD_HELP:
+            await event.edit(str(CMD_HELP[args]))
+        else:
+            await event.edit("**Module doesn't exist or Module name is invalid**😔")
+    else:
+        await event.edit("\nAvailable Modules:"
 "\n\n• 𝗔𝗱𝗺𝗶𝗻: `admin`, `chat`"
 "\n• 𝗨𝗽𝗱𝗮𝘁𝗲𝗿: `update`, `update now`"
 "\n• 𝗠𝗲𝗺𝗲𝘀: `memes`, `deepfry`, `dfry`, `dice`, `basketball`, `dart`, `waifu`, `random`, `carbon`,"
@@ -36,4 +44,9 @@ async def help(e):
 "\n  --  " 
 "\n• **Please specify which module do you want help for !!**"
 "\n**Usage:** `.help <module name> to know how it works`")
+        string = ""
+        for i in CMD_HELP:
+            string += "`" + str(i)
+            string += "`  -  "
+        await event.reply(string)
         
