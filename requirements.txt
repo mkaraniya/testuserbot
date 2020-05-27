@@ -67,3 +67,4 @@ csvfaker
 pymongo[srv]
 youtube_search
 instalooter>=2.3.4
+spamwatch>=0.2.0
