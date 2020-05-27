@@ -55,6 +55,7 @@ RUN apk add --no-cache=true --update \
     sudo \
     chromium \
     chromium-chromedriver \
+    instalooter \
     zlib-dev \
     jpeg 
     #
