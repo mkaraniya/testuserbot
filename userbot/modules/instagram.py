@@ -22,7 +22,7 @@ from userbot.events import register
 async def instagram_dl(igdl):
     """ To downloading photos from instagram account """
     uname = igdl.pattern_match.group(1)
-    input_str = TEMP_DOWNLOAD_DIRECTORY
+    input_str = "TEMP_DOWNLOAD_DIRECTORY"
     if not os.path.exists(input_str):
         os.makedirs(input_str)
     try:
