@@ -66,4 +66,4 @@ jotquote
 csvfaker
 pymongo[srv]
 youtube_search
-instalooter
+instalooter>=2.3.4
