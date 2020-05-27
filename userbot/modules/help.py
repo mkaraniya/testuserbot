@@ -11,7 +11,7 @@ import asyncio
 
 
 @register(outgoing=True, pattern="^.help$")
-async def helpx(e):
+async def help(e):
     if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
         await e.edit("\nAvailable Modules:"
 "\n\n• 𝗔𝗱𝗺𝗶𝗻: `admin`, `chat`"
@@ -33,9 +33,8 @@ async def helpx(e):
 "\n• 𝗨𝘀𝗲𝗿𝗯𝗼𝘁: `useitoub`, `sleep`, `shutdown`, `restart`, `anti_spambot`, `sysd`, `botver`, `alive`, `dbs`, `creator`, `readme`, `time`, `date`" 
 "\n• 𝗦𝘁𝗶𝗰𝗸𝗲𝗿𝘀: `stickers`"  
 "\n• 𝗠𝘂𝘀𝗶𝗰: `song`, `lyrics`")
-        
-            await e.edit("Please specify which module do you want help for !!\
-            \nUsage: .help <module name> to know how it works")
+await e.edit("Please specify which module do you want help for !!\
+             \nUsage: .help <module name> to know how it works")
         string = ""
         for i in CMD_HELP:
             string += "`" + str(i)
