@@ -41,8 +41,6 @@ async def help(event):
 "\n• 𝗨𝘀𝗲𝗿𝗯𝗼𝘁: `useitoub`, `sleep`, `shutdown`, `restart`, `anti_spambot`, `sysd`, `botver`, `alive`, `dbs`, `creator`, `readme`, `time`, `date`"
 "\n• 𝗦𝘁𝗶𝗰𝗸𝗲𝗿𝘀: `stickers`"
 "\n• 𝗠𝘂𝘀𝗶𝗰: `song`, `lyrics`"
-"\n  --  " 
-"\n• **Please specify which module do you want help for !!**"
-"\n**Usage:** `.help <module name> to know how it works`")
-        
-        
+"\n  --  \n"
+"f• **Please specify which module do you want help for !!**\n"
+"f**Usage:** `.help <module name> to know how it works`")
