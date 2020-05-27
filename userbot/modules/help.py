@@ -27,7 +27,7 @@ async def help(event):
 "\n• 𝗠𝗲𝗺𝗲𝘀: `memes`, `deepfry`, `dfry`, `dice`, `basketball`, `dart`, `waifu`, `random`, `carbon`,"
 "\n• 𝗔𝗻𝗱𝗿𝗼𝗶𝗱: `android`, `magisk`"
 "\n• 𝗔𝗳𝗸: `afk`"
-"\n• 𝗧𝗼𝗼𝗹𝘀: `all`, `antivirus`, `dictionary`,`dogbin`, `listmyusernames`, `ocr`,`qr`, `sangmata`, `currency`, `wiki`, `ud`, `tts`, `trt`, `yt`, `imdb`, `ss`, `telegraph`, `compress`, `rbg`, `barcode`, `quotly`"  
+"\n• 𝗧𝗼𝗼𝗹𝘀: `all`, `antivirus`, `dictionary`,`dogbin`, `listmyusernames`, `ocr`,`qr`, `currency`, `wiki`, `ud`, `tts`, `trt`, `yt`, `imdb`, `ss`, `telegraph`, `compress`, `rbg`, `barcode`, `quotly`"  
 "\n• 𝗡𝗼𝘁𝗲𝘀: `notes`, `filter`, `snips`"
 "\n• 𝗧𝗲𝘅𝘁-𝗧𝗿𝗮𝗻𝘀𝗳𝗼𝗿𝗺:`figlet`, `sticklet_un`, `base64`, `hash`, `textx`"
 "\n• 𝗣𝗠: `logpms`, `nopm`, `pmpermit`"
