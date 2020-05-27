@@ -90,7 +90,8 @@ COPY ./sample_config.env ./userbot.session* ./config.env* /root/userbot/
 #
 RUN pip3 install -r requirements.txt
 CMD ["bash","sessions/redis.py"]
+CMD ["redis-server","--daemonize","yes"]
 CMD ["bash","init/start.sh"]
-#CMD ["python3","-m","userbot"]
+CMD ["python3","-m","userbot"]
 
 
