@@ -19,7 +19,7 @@ from userbot.modules.dbhelper import (add_chat_fban, add_chat_gban, get_fban,
 async def gban_all(msg):
     if is_mongo_alive() or is_redis_alive():
         await msg.edit("`Database connecting please wait!`")
-        return
+       # return
     textx = await msg.get_reply_message()
     if textx:
         try:
