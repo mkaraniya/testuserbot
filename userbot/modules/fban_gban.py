@@ -158,8 +158,8 @@ async def fedban_all(msg):
 
 @register(outgoing=True, pattern="^.addfban")
 async def add_to_fban(chat):
-    if not is_mongo_alive() or not is_redis_alive():
-        await chat.edit("`Database connections failing!`")
+    if is_mongo_alive() or is_redis_alive():
+        await chat.edit("`Database connecting please wait!`")
         return
     await add_chat_fban(chat.chat_id)
     await chat.edit("`Added this chat under the Fbanlist!`")
@@ -167,8 +167,8 @@ async def add_to_fban(chat):
 
 @register(outgoing=True, pattern="^.addgban")
 async def add_to_gban(chat):
-    if not is_mongo_alive() or not is_redis_alive():
-        await chat.edit("`Database connections failing!`")
+    if is_mongo_alive() or is_redis_alive():
+        await chat.edit("`Database connecting please wait!`")
         return
     await add_chat_gban(chat.chat_id)
     print(chat.chat_id)
@@ -177,8 +177,8 @@ async def add_to_gban(chat):
 
 @register(outgoing=True, pattern="^.removefban")
 async def remove_from_fban(chat):
-    if not is_mongo_alive() or not is_redis_alive():
-        await chat.edit("`Database connections failing!`")
+    if is_mongo_alive() or is_redis_alive():
+        await chat.edit("`Database connecting please wait!`")
         return
     await remove_chat_fban(chat.chat_id)
     await chat.edit("`Removed this chat from the Fbanlist!`")
@@ -186,8 +186,8 @@ async def remove_from_fban(chat):
 
 @register(outgoing=True, pattern="^.removegban")
 async def remove_from_gban(chat):
-    if not is_mongo_alive() or not is_redis_alive():
-        await chat.edit("`Database connections failing!`")
+    if is_mongo_alive() or is_redis_alive():
+        await chat.edit("`Database connecting please wait!`")
         return
     await remove_chat_gban(chat.chat_id)
     await chat.edit("`Removed this bot from the Gbanlist!`")
