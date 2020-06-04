@@ -13,12 +13,12 @@ from shutil import which
 from os import remove
 from telethon import version
 
-from userbot import CMD_HELP, ALIVE_NAME, Bot_Hub
+from userbot import CMD_HELP, ALIVE_NAME, BOT_HUB
 from userbot.events import register
 
 # ================= CONSTANT =================
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
-BotHub = Bot_Hub
+BotHub = BOT_HUB
 # ============================================
 
 
