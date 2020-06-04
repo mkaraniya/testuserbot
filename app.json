@@ -104,6 +104,10 @@
       "description": "Get your own APPID (API key)from https://api.openweathermap.org/data/2.5/weather",
       "required": false
     },
+    "Bot_Hub": {
+      "description": "TO ADD TIME ON YOUR PROFILE PIC, ADD LINK OF IMAGE ENDING WITH .JPG",
+      "value": "https://telegra.ph/file/3e7b54d5ef234d0b6c170.jpg"
+    },
     "BOTLOG": {
       "description": "Incase you want to turn off logging, put this to false",
       "value": "False"
