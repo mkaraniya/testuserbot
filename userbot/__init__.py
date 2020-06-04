@@ -118,6 +118,7 @@ LYDIA_API_KEY = os.environ.get("LYDIA_API_KEY", None)
 
 # set blacklist_chats where you do not want userbot's features
 UB_BLACK_LIST_CHAT = os.environ.get("UB_BLACK_LIST_CHAT", "")
+BOT_HUB = os.environ.get("BOT_HUB", "https://telegra.ph/file/3e7b54d5ef234d0b6c170.jpg")
 
 # Telegraph 
 TELEGRAPH_SHORT_NAME = os.environ.get("TELEGRAPH_SHORT_NAME", None)
