@@ -19,7 +19,7 @@ from userbot.events import register
 # ================= CONSTANT =================
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node
 BotHub = BOT_HUB
-hi = [![Alive](https://telegra.ph/file/d04a1724c6dd8a957bd0e.png)](https://www.google.com)
+hi = [![Alive](https://telegra.ph/file/d04a1724c6dd8a957bd0e.png)]
 # ============================================
 
 
